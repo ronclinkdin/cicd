@@ -1,25 +1,29 @@
-name: CI
+name: CI Workflow
 
+# Trigger the workflow on push or pull request events
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: self-hosted
 
-        steps:
-            - name: Checkout code
-                uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-            - name: Set up Docker
-                uses: docker/setup-docker@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
 
-            - name: Pull Docker image
-                run: docker pull pengbai/docker-supermario
-            - name: Run Docker image
-                run: docker run pengbai/docker-supermario
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
